@@ -9,3 +9,5 @@ xgboost
 simpy
 imbalanced-learn
 openpyxl
+streamlit
+plotly

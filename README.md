@@ -21,6 +21,30 @@ This generates the data, runs the full pipeline and writes all outputs to
 `output/` (charts, reports, trained models, Power BI export) and the
 cleaned SQLite database to `data/operations.db`.
 
+## Real-time dashboard
+
+A live "control tower" dashboard (Streamlit + Plotly) sits on top of the
+pipeline. A shopfloor feed simulator streams 5-minute production buckets
+and machine sensor readings into SQLite; the dashboard auto-refreshes
+every 5 seconds and scores incoming sensor data with the trained
+predictive-maintenance model to raise failure alerts.
+
+```bash
+python run_all.py                      # once, to build the DB and models
+python -m src.live_feed --interval 2   # terminal 1: live data feed
+streamlit run dashboard/app.py         # terminal 2: dashboard
+```
+
+Dashboard sections:
+- **Live tiles** — estimated OEE, availability, throughput, defect rate
+  and predictive-maintenance alert count over the last 30 minutes
+- **Live charts** — per-line throughput (units/min) and availability bars
+- **PdM alerts** — machines the Random Forest model predicts will fail
+  within 72 hours, with sensor readings and risk score
+- **Analytical layer** — 12-month availability trends, downtime Pareto,
+  the 12-KPI traffic-light baseline and the demand history/forecast
+  comparison
+
 ## Pipeline modules (mapped to training weeks)
 
 | Module | Training week | What it does |
