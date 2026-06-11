@@ -21,7 +21,28 @@ This generates the data, runs the full pipeline and writes all outputs to
 `output/` (charts, reports, trained models, Power BI export) and the
 cleaned SQLite database to `data/operations.db`.
 
-## Real-time dashboard
+## React frontend (Operations Control Tower)
+
+A designer-grade reactive frontend lives in `frontend/` (React 18 + Vite +
+Recharts, dark glassmorphism theme) backed by a FastAPI JSON API in
+`api/main.py`. The live page polls every 5 seconds; nine analytical pages
+cover OEE, downtime, quality SPC, throughput/seasonality, inventory,
+forecasting, predictive maintenance, simulation/CBA and KPI governance.
+
+```bash
+python run_all.py                      # once, builds DB + models
+python -m src.live_feed --interval 2   # terminal 1: live data feed
+uvicorn api.main:app --port 8000       # terminal 2: API + UI
+# open http://localhost:8000  (pre-built frontend ships in frontend/dist)
+```
+
+To develop the frontend with hot reload:
+
+```bash
+cd frontend && npm install && npm run dev   # proxies /api to :8000
+```
+
+## Streamlit dashboard (alternative)
 
 A live "control tower" dashboard (Streamlit + Plotly) sits on top of the
 pipeline. A shopfloor feed simulator streams 5-minute production buckets

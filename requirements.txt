@@ -11,3 +11,5 @@ imbalanced-learn
 openpyxl
 streamlit
 plotly
+fastapi
+uvicorn[standard]
